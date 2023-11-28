@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Магазин автозапчастин</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px;
+      background-color: #333;
+      color: white;
+    }
+
+    .cart-icon {
+      position: relative;
+      cursor: pointer;
+    }
+
+    .cart-icon img {
+      width: 30px;
+      height: auto;
+    }
+
+    .cart-count {
+      position: absolute;
+      top: -10px;
+      right: -10px;
+      background-color: red;
+      color: white;
+      border-radius: 50%;
+      padding: 5px;
+    }
+
+    .products-container {
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      margin: 20px;
+    }
+
+    .product-card {
+      flex: 0 0 45%; /* Розмір товару в залежності від ширини екрану */
+      border: 1px solid #ccc;
+      padding: 10px;
+      margin: 10px;
+      text-align: center;
+      background-color: white;
+      transition: transform 0.3s ease-in-out; /* Додав анімацію при наведенні */
+    }
+
+    .product-card:hover {
+      transform: scale(1.05); /* Збільшення товару при наведенні */
+    }
+
+    .product-card img {
+      max-width: 100%;
+      height: auto;
+      margin-bottom: 10px;
+    }
+
+    .quantity-input {
+      width: 40px;
+      text-align: center;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background: white;
+      padding: 20px;
+      border-radius: 5px;
+    }
+
+    .checkout-button {
+      background-color: #4caf50;
+      color: white;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .return-button {
+      background-color: #2196F3;
+      color: white;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Магазин автозапчастин</h1>
+    <div class="cart-icon" onclick="showCart()">
+      <img src="https://cdn.iconscout.com/icon/free/png-256/shopping-cart-452-1163339.png" alt="Корзина">
+      <span class="cart-count" id="cartCount">0</span>
+    </div>
+  </header>
+
+  <div class="products-container">
+    <div class="product-card">
+      <h2>Циліндр</h2>
+      <img src="https://images.prom.ua/4648644792_w600_h600_4648644792.jpg" alt="Циліндр">
+      <p>Це циліндр для вашого автомобіля. Високоякісний і надійний товар.</p>
+      <button onclick="addToCart('Циліндр')">Додати у корзину</button>
+    </div>
+
+    <div class="product-card">
+      <h2>Поршень</h2>
+      <img src="https://images.prom.ua/1673745665_w600_h600_1673745665.jpg" alt="Поршень">
+      <p>Поршень для двигуна. Гарантована якість і довговічність.</p>
+      <button onclick="addToCart('Поршень')">Додати у корзину</button>
+    </div>
+  </div>
+
+  <div class="modal" id="cartModal">
+    <div class="modal-content">
+      <h2>Ваша корзина</h2>
+      <div id="cartItems"></div>
+      <button class="checkout-button" onclick="checkout()">Оплатити</button>
+      <button class="return-button" onclick="hideCart()">Повернутись до покупок</button>
+    </div>
+  </div>
+
+  <script>
+    let cart = [];
+
+    function addToCart(itemName) {
+      const quantity = prompt(`Вкажіть кількість товару "${itemName}":`) || 1;
+
+      const item = {
+        name: itemName,
+        quantity: parseInt(quantity),
+      };
+
+      cart.push(item);
+      updateCartCount();
+      showCart();
+    }
+
+    function updateCartCount() {
+      const cartCount = document.getElementById('cartCount');
+      const totalCount = cart.reduce((total, item) => total + item.quantity, 0);
+      cartCount.innerText = totalCount;
+    }
+
+    function showCart() {
+      const cartModal = document.getElementById('cartModal');
+      const cartItems = document.getElementById('cartItems');
+      cartItems.innerHTML = '';
+
+      if (cart.length === 0) {
+        alert('Корзина пуста');
+        return;
+      }
+
+      for (const item of cart) {
+        const itemDiv = document.createElement('div');
+        itemDiv.innerText = `${item.name}: ${item.quantity} шт.`;
+        cartItems.appendChild(itemDiv);
+      }
+
+      cartModal.style.display = 'flex';
+    }
+
+    function hideCart() {
+      const cartModal = document.getElementById('cartModal');
+      cartModal.style.display = 'none';
+    }
+
+    function checkout() {
+      alert('Оплата успішно здійснена!');
+      cart = [];
+      updateCartCount();
+      hideCart();
+    }
+
+    window.onclick = function(event) {
+      if (event.target === document.getElementById('cartModal')) {
+        hideCart();
+      }
+    };
+  </script>
+</body>
+</html>
